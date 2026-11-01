@@ -1,0 +1,27 @@
+syntax = "proto3";
+package demo;
+
+import "pbform/ui_options.proto";
+
+enum Mode {
+  MODE_UNSPECIFIED = 0;
+  MODE_ECO = 1;
+  MODE_FAST = 2;
+}
+
+message Limits {
+  double max_pressure = 1 [(pbform.field_ui) = { label: "Max. Druck", unit: "bar", min: 0, max: 16 }];
+  double max_temp     = 2 [(pbform.field_ui) = { label: "Max. Temperatur", unit: "°C", min: 0, max: 400 }];
+}
+
+message Recipe {
+  option (pbform.message_ui) = { title: "Rezept", table_name: "recipes", list_columns: "name" };
+
+  string name        = 1 [(pbform.field_ui) = { label: "Name", group: "Allgemein", order: 1 }];
+  string description = 2 [(pbform.field_ui) = { label: "Beschreibung", group: "Allgemein", widget: "textarea", order: 2 }];
+  bool   active      = 3 [(pbform.field_ui) = { label: "Aktiv", group: "Allgemein", order: 3 }];
+  double temperature = 4 [(pbform.field_ui) = { label: "Temperatur", unit: "°C", min: 0, max: 300, group: "Prozess", tooltip: "Solltemperatur" }];
+  int32  duration_s  = 5 [(pbform.field_ui) = { label: "Dauer", unit: "s", min: 1, max: 86400, group: "Prozess" }];
+  Mode   mode        = 6 [(pbform.field_ui) = { label: "Modus", group: "Prozess" }];
+  Limits limits      = 7 [(pbform.field_ui) = { label: "Grenzwerte", group: "Sicherheit" }];
+}

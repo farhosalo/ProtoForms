@@ -1,0 +1,26 @@
+syntax = "proto3";
+package pbform;
+
+import "google/protobuf/descriptor.proto";
+
+message FieldUi {
+  string label = 1;
+  string unit = 2;
+  optional double min = 3;
+  optional double max = 4;
+  string group = 5;      // Gruppierung (GroupBox)
+  bool read_only = 6;
+  string widget = 7;     // "textarea" (weitere folgen)
+  string tooltip = 8;
+  int32 order = 9;       // Sortierung innerhalb der Maske
+  bool db_index = 10;    // für die spätere relationale DB-Schicht
+}
+
+message MessageUi {
+  string title = 1;
+  string table_name = 2;
+  repeated string list_columns = 3;
+}
+
+extend google.protobuf.FieldOptions   { FieldUi   field_ui   = 50001; }
+extend google.protobuf.MessageOptions { MessageUi message_ui = 50001; }

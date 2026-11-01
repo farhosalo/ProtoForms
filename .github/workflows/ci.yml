@@ -1,0 +1,23 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  ubuntu:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build qt6-base-dev libprotobuf-dev libprotoc-dev protobuf-compiler
+      - run: cmake -B build -G Ninja
+      - run: cmake --build build
+      - run: ctest --test-dir build --output-on-failure
+
+  macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install qt protobuf ninja
+      - run: cmake -B build -G Ninja -DCMAKE_PREFIX_PATH="$(brew --prefix qt);$(brew --prefix protobuf)"
+      - run: cmake --build build
+      - run: ctest --test-dir build --output-on-failure
